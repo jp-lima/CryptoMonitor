@@ -1,24 +1,21 @@
 import pandas as pd
 
-dataframe_das_criptomoedas = pd.read_csv('cripto_em_ordem_alfabetica.csv')
-df_copia = dataframe_das_criptomoedas
 
 pesquisa_usuario = 'i'.lower()
 
 
 
-lista_cordenadas_criptomoedas_encontradas= []
 
-lista_criptomoedas_encontradas = []
-
-
-def pesquisador (dataframe, nome_da_cripto):
-
+def pesquisador (nome_dataframe, nome_da_cripto, lista_cordenadas):
+    
+    dataframe = pd.read_csv(nome_dataframe)
+    #df_copia = dataframe
+    
     baixo = 0
     alto = len (dataframe)  - 1
     while baixo <= alto:
         meio = (baixo + alto) // 2
-        while meio in lista_cordenadas_criptomoedas_encontradas:
+        while meio in lista_cordenadas:
             meio += 1 
             
         if meio > alto:
@@ -28,6 +25,7 @@ def pesquisador (dataframe, nome_da_cripto):
         chute = ch.lower()
         
         if chute [0:len(nome_da_cripto)] == nome_da_cripto:
+            dataframe.drop(meio, axis=0, inplace=True) #apagar o objeto encontrado do dataframe pra não ser encontrado duas vezes
             return ch,meio
             
         elif chute > nome_da_cripto:
@@ -40,10 +38,14 @@ def pesquisador (dataframe, nome_da_cripto):
 
 
 
-def pesquisa_de_criptomoedas(dataframe, cripto):
+def pesquisa_de_criptomoedas(ndataframe, cripto):
+
+    lista_cordenadas_criptomoedas_encontradas= []
+    lista_criptomoedas_encontradas = []
     while True:    
         
-        resultado = pesquisador (dataframe, cripto)
+    
+        resultado = pesquisador (ndataframe, cripto, lista_cordenadas_criptomoedas_encontradas)
         
         if resultado == None:
             break
@@ -52,10 +54,9 @@ def pesquisa_de_criptomoedas(dataframe, cripto):
         
         lista_criptomoedas_encontradas.append(resultado[0])
 
-        dataframe.drop(resultado[1], axis=0, inplace=True)
+        #dataframe.drop(resultado[1], axis=0, inplace=True)
     return lista_criptomoedas_encontradas
 
 
-resultado_pesquisa = pesquisa_de_criptomoedas(df_copia, pesquisa_usuario )
+#resultado_pesquisa = pesquisa_de_criptomoedas('cripto_em_ordem_alfabetica.csv', pesquisa_usuario )
 
-print (resultado_pesquisa)
