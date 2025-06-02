@@ -20,16 +20,10 @@ def criar_dicionario_com_valores_da_cripto(criptos_e_cordenadas, dataframe):
 
     for itens in criptos_e_cordenadas[1]:
 
-        dicionario_com_valores_criptos = {'Moeda': dataframe.iloc [itens]["Moeda"], 'Preço': dataframe.iloc[itens]["Preço"], "Volume em 24h":dataframe.iloc[itens]['Volume em 24 h']
+        dicionario_com_valores_criptos = {'Moeda': dataframe.iloc [itens]["Moeda"], 'Preço': dataframe.iloc[itens]["Preço"], "Volume":dataframe.iloc[itens]['Volume em 24 h']
     , "Capitalização": dataframe.iloc[itens]['Capitalização de mercado'], "FDV": dataframe.iloc[itens]['FDV']}
         lista.append(dicionario_com_valores_criptos)
     return lista
-
-
-t = criar_dicionario_com_valores_da_cripto(resultado_pesquisa, dataframe_das_criptomoedas)
-
-print (t[1])
-
 
 
 
@@ -37,41 +31,42 @@ print (t[1])
 
 
 class Cripto():
-    def __init__(self, nome, dicionario_com_todos_os_valores__da_cripto):
-        self.nome = nome
+    def __init__(self,dicionario_com_todos_os_valores__da_cripto, confirm_filtro, dicionario_com_valores_de_min_ou_max):  #função para definir quais foram os filtros pedidos
+
+        #self.nome = dicionario_com_todos_os_valores__da_cripto['Moeda']
+
+        self.min_max = dicionario_com_valores_de_min_ou_max
+
+        self.lista_com_as_opcs = ['Preço', 'Volume', 'Capitalização', "FDV"]
 
         self.dicionario = dicionario_com_todos_os_valores__da_cripto
-
-    def filtro(self, confirm_filtro, lista_valores_min_max):    # função para ver qual filtro foi pedido e se aquele valor do elemento respeita o valor minimo e maximo
-        print ('nada')
+        self.lista_com_as_opcs_escolhidas = list()
         
+        for indice in range(0,4):
+            if confirm_filtro[indice] == '1':
+                self.lista_com_as_opcs_escolhidas.append(self.lista_com_as_opcs[indice])
 
 
+    def filtro(self):    # função para conferir se aquele valor do elemento respeita o valor minimo e maximo
+
+        l = list()
+
+        for elementos in self.lista_com_as_opcs:
+            
+            
+            
+            if elementos in self.lista_com_as_opcs_escolhidas:
+                print ( self.dicionario[elementos])
+                    
 
 
+dici = criar_dicionario_com_valores_da_cripto(resultado_pesquisa, dataframe_das_criptomoedas)
 
-def definir_filtros(nome, cordendas_das_criptos):
-    cripto = Cripto()
+dicionario_valores_min_max = {'Preço': [0.5,0.9] , 'Volume': [889947, 12046162], 'Capitalização': [7081888,514775291], 'FDV': [7686909, 274248767]}
 
-    dataframe = pd.read_csv(nome)
+criptomoeda = Cripto(dici[0], '1101', dicionario_valores_min_max)
 
-    for cordenada in cordendas_das_criptos:
-        
-
-        nome_criptomoeda = dataframe.loc[cordenada, "Moeda"]
-        
-        cripto_objeto = Cripto(nome_criptomoeda, "0000")
-
-
-        volume_em_24h_criptomoeda = dataframe.loc[cordenada, "Volume em 24 h"]
-        capitalizacao_criptomoeda = dataframe.loc[cordenada, "Capitalização de mercado"]
-        fdv_criptomoeda = dataframe.loc[cordenada, "FDV"]
-        preco_criptomoeda = dataframe.loc[cordenada, "Preço"]
-
-        filtro_preco = cripto_objeto.filtro(preco_criptomoeda)
-
-
-
+criptomoeda.filtro()
 
 
 
