@@ -1,3 +1,12 @@
-lista = [[111, 300],[222,444]]
+import pandas as pd
 
-print(lista[0][0])
+t = pd.read_csv('criptomoedas.csv')
+
+
+linha = t.iloc[2]
+
+
+
+data = pd.DataFrame(linha)
+
+print (data)
