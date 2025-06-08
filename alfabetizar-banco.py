@@ -1,7 +1,7 @@
-import pandas as pd
+import pandas as pd; from itertools import chain
 nomes = list()
-
 df = pd.DataFrame()
+
 
 class Cripto():
     def __init__(self, nome_dataframe):
@@ -10,6 +10,7 @@ class Cripto():
         #lista_com_todos_os_dicionarios_dos_valores_das_criptos.append(dicionario_com_valores_criptos)
 
     def criar_dataframe_numa_linha(self,indice,dataframe_existente):
+
         self.dicionario_com_valores_criptos = {'Moeda': self.dataframe.iloc [indice]["Moeda"], 'Preço': self.dataframe.iloc[indice]["Preço"]
     , "Volume":self.dataframe.iloc[indice]['Volume em 24 h'] , "Capitalização": self.dataframe.iloc[indice]['Capitalização de mercado'], "FDV": self.dataframe.iloc[indice]['FDV']}
         
@@ -18,8 +19,6 @@ class Cripto():
         dt = pd.concat([df_novo, dataframe_existente])
 
         return dt
-
-
 
 #função para separar os nomes das criptos em listas que estão em ordem alfabetica
 def organizar_na_ordem_por_lista (nome_dataframe):                
@@ -49,8 +48,6 @@ def organizar_na_ordem_por_lista (nome_dataframe):
     lista_ordem_alfabetica_definitiva = organizar_em_ordem_alfabetica_dentro_das_listas(lista_de_A_a_Z)
     return lista_ordem_alfabetica_definitiva
 
-
-
 def organizar_em_ordem_alfabetica_dentro_das_listas(lista):   #função para organizar a ordem dos nomes dentro de suas respectivas listas
     lista_mais_ordenada = list()
     cont = 0
@@ -63,70 +60,62 @@ def organizar_em_ordem_alfabetica_dentro_das_listas(lista):   #função para org
 
 #lista_ordem_alfabetica_definitiva = organizar_em_ordem_alfabetica_dentro_das_listas(lista_nova)
 
-def transformar_listas_de_nome_em_lista_de_indice(lista_com_nomes_em_ordem_alfabetica, nome_do_dataframe):
-    lista_todos_indices = list()
-    df = pd.read_csv(nome_do_dataframe)
-    lista=['qualquer palavra, não importa']
-    while len(lista_com_nomes_em_ordem_alfabetica) > 0:
-        print (lista)
-        df_copia = df.reset_index()
-        
-        if len(lista) == 0:
-            del (lista_com_nomes_em_ordem_alfabetica[0])
+def transformar_listas_de_nome_em_lista_de_indice(lista_com_nomes_em_ordem_alfabetica,df, lista_todos_indices):
 
-        lista = lista_com_nomes_em_ordem_alfabetica[0]
-        nome_de_uma_cripto = lista[0]
+    # variaveis de configuração {
+    lista = lista_com_nomes_em_ordem_alfabetica[0]
+    nome_duma_cripto_na_lista = lista[0]
+        #}
 
-        for linha in df_copia.index:
-            nome_da_cripto_q_esta_no_df = df.loc[linha, 'Moeda']
 
-            if nome_da_cripto_q_esta_no_df == nome_de_uma_cripto:
+    lista_com_nomes_em_ordem_alfabetica = list(chain.from_iterable(lista_com_nomes_em_ordem_alfabetica))
+    
+    for nome_duma_cripto_na_lista in lista_com_nomes_em_ordem_alfabetica:
+
+        #print (lista_com_nomes_em_ordem_alfabetica)
+
+        for linha in df.index:
+            nome_duma_cripto_no_df = df.loc[linha, 'Moeda']
+            
+            if nome_duma_cripto_na_lista == nome_duma_cripto_no_df:
+                df.drop(linha,axis=0)
+                df = df.reset_index(drop=True)
                 lista_todos_indices.append(linha)
-                df.drop(linha, axis=0)
-                del(lista[0])
+
     return lista_todos_indices
 
+#função para organizar tudo  
 
 def alfabetizar_tudo():
-
+    df = pd.DataFrame()
+    lista = list()
     criptomoeda_objeto = Cripto('banco_de_dados/criptomoedas.csv')
+    listinha = organizar_na_ordem_por_lista('banco_de_dados/criptomoedas.csv')
+    lista_indices  = transformar_listas_de_nome_em_lista_de_indice(listinha,df, lista)
+
+    for indice_um_por_um in lista_indices:
+        df = criptomoeda_objeto.criar_dataframe_numa_linha(indice_um_por_um, df)
+
+    df_qua = df.reset_index
+    return df_qua
 
 
-
-    lista_com_todos_nomes_organizados = organizar_na_ordem_por_lista('banco_de_dados/criptomoedas.csv')
-    
-
-    lista_dos_nomes_por_letra = lista_com_todos_nomes_organizados[0]
-
-    for criptomoeda in lista_dos_nomes_por_letra:
-        criptomoeda_objeto.criar_dataframe_numa_linha()
+df = pd.read_csv('banco_de_dados/criptomoedas.csv')
+df_outro = pd.DataFrame()
 
 
+lista = list()
 
-deci = {
-'Moeda': ['caralho', 'bitch'],
-'Preço': ['ww33', 'tr555'],
-'Volume': ['12.232.343','US 98388789'],
-'Capitalização': ['US  65.426',  'US 454.766'],
-'FDV': ['US 45.234', 'YER 976.876.988']
-}
-
-
-x = Cripto('banco_de_dados/criptomoedas.csv')
-
-r = pd.DataFrame(deci)
-
-d = x.criar_dataframe_numa_linha(12,r)
-
-d = x.criar_dataframe_numa_linha(134,d)
-
-
-d = d.reset_index(drop=True)
-
-print (d)
+criptomoeda_objeto = Cripto('banco_de_dados/criptomoedas.csv')
 
 listinha = organizar_na_ordem_por_lista('banco_de_dados/criptomoedas.csv')
+lista_indices  = transformar_listas_de_nome_em_lista_de_indice(listinha,df, lista)
 
-lista_indices  = transformar_listas_de_nome_em_lista_de_indice(listinha, 'banco_de_dados/criptomoedas.csv')
+for indice in lista_indices:
+    df = criptomoeda_objeto.criar_dataframe_numa_linha(indice, df)
+    df_qua = pd.reset_index(df)
 
-print (lista_indices)
+
+print(df_qua)
+
+df_qua.to_csv('banco_de_dados/cripto_em_ordem_alfabetica.csv', index=False)
