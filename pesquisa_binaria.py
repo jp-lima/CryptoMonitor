@@ -1,6 +1,5 @@
 import pandas as pd
-
-
+from objeto import *
 
 
 def pesquisador (dataframe, nome_da_cripto):
@@ -40,36 +39,43 @@ def pesquisador (dataframe, nome_da_cripto):
 
 def pesquisa_de_criptomoedas(ndataframe, cripto):
     dataframe = pd.read_csv(ndataframe)
+    dataframe_com_resultado = pd.DataFrame()
+    
+
     lista_cordenadas_criptomoedas_encontradas= []
     lista_criptomoedas_encontradas = []
     while True:    
         
         dataframe = dataframe.reset_index(drop=True)
 
-    
-        resultado = pesquisador (dataframe, cripto,)
+        resultado = pesquisador (dataframe, cripto)
+        
 
+        print (resultado)
         
         if resultado == None:
             break
         else:
+            criptomoeda_objeto =  Cripto(dataframe)
+            dataframe_com_resultado = criptomoeda_objeto.criar_dataframe_numa_linha(resultado[1],dataframe_com_resultado )
             dataframe.drop(resultado[1], axis=0, inplace=True)
         lista_cordenadas_criptomoedas_encontradas.append(resultado[1])
         
         lista_criptomoedas_encontradas.append(resultado[0])
-
-        
-    return lista_criptomoedas_encontradas,lista_cordenadas_criptomoedas_encontradas
-
-
+        #lista_criptomoedas_encontradas,lista_cordenadas_criptomoedas_encontradas
+    dataframe_com_resultado = dataframe_com_resultado.reset_index(drop=True)
+    return dataframe_com_resultado
 
 
 
-'''
 
-pesquisa_usuario = 'y'.lower()
+if __name__ == "__main__":
+    criptomoeda_objeto = Cripto('banco_de_dados/cripto_em_ordem_alfabetica.csv')
 
-
-resultado_pesquisa = pesquisa_de_criptomoedas('cripto_em_ordem_alfabetica.csv', pesquisa_usuario )
-print (len (resultado_pesquisa[0]))
-'''
+    
+    df = pd.DataFrame()
+    pesquisa_usuario = 'pa'.lower()
+    resultado_pesquisa = pesquisa_de_criptomoedas('banco_de_dados/cripto_em_ordem_alfabetica.csv', pesquisa_usuario )
+    
+    print (resultado_pesquisa)
+    
