@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="pt-BR">
 
 <head>
     <title>Crypto Monitor</title>
@@ -8,8 +8,11 @@
 </head>
 
 <body>
-    <h1> {{ nome_da_moeda }}</h1>
+    <h1> {{ nome_da_moeda|safe }}</h1>
 
+
+
+    <!--
     <h2> {{filtro_preço}}</h2>
     <br>
 
@@ -22,7 +25,7 @@
     <br>
 
     <h2> {{filtro_fdv}}</h2>
-
+-->
 </body>
 
 

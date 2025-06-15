@@ -1,20 +1,25 @@
 from flask import Flask, render_template, request;
-from filtros import *;
-
+import pandas as pd
+from pesquisa_binaria import *
 
 app = Flask(__name__)
 
-app.route('/')
+@app.route('/')
 def index():
-    return render_template('index.html', methods='POST')
+    return render_template('index.html')
 
-app.route('/outputs')
+
+@app.route('/', methods=['POST'])
 def resposta():
-    moeda = request.form.get('filtro_preço')
+    moeda = request.form.get('pesquisa')
+    print(moeda)
 
-    min_max_preço = [request.form.get('min_preço'), request.form.get('max_preço')]
+    resultado =  pesquisa_de_criptomoedas('banco_de_dados/cripto_em_ordem_alfabetica.csv',(moeda).lower())
 
-    
+    return render_template('output.html',nome_da_moeda= resultado )
 
 
 
+
+if __name__ == '__main__':
+    app.run(debug=True)

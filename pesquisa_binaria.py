@@ -23,8 +23,6 @@ def pesquisador (dataframe, nome_da_cripto):
         
         if chute [0:len(nome_da_cripto)] == nome_da_cripto:
         
-
-            #dataframe.drop(meio, axis=0, inplace=True) #apagar o objeto encontrado do dataframe pra não ser encontrado duas vezes
             return ch,meio
             
         elif chute > nome_da_cripto:
@@ -50,8 +48,6 @@ def pesquisa_de_criptomoedas(ndataframe, cripto):
 
         resultado = pesquisador (dataframe, cripto)
         
-
-        print (resultado)
         
         if resultado == None:
             break
